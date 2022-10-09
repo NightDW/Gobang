@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th=“http://www.thymeleaf.org”>
+<head>
+    <meta charset="UTF-8">
+    <title>Gobang</title>
+    <style>
+        body {
+
+        }
+        .row {
+            height: 50px;
+        }
+        .grid {
+            display: inline-block;
+            border: 2px gray solid;
+            height: 44px;
+            width: 44px;
+            border-radius: 22px;
+            text-align: center;
+            font-size: 16px;
+            line-height: 44px;
+        }
+        .color0 {
+            background-color: #E8E8E8;
+        }
+        .color1 {
+            background-color: black;
+        }
+        .color2 {
+            background-color: red;
+        }
+        .last {
+            border: 2px blue solid;
+        }
+        .buttons {
+            height: 44px;
+            line-height: 20px;
+            margin-top: 20px;
+        }
+        .buttons button {
+            height: 30px;
+            width: 100px;
+            margin-right: 30px;
+        }
+    </style>
+</head>
+<body>
+<div class="row" th:each="row,x:${chess.matrix}">
+    <div th:class="${'grid color' + grid} + ${chess.isLast(x.index, y.index) ? ' last' : ''}" th:each="grid,y:${row}" th:text="${chess.getBlankType(x.index, y.index)}" autoNext="true" th:attr="x=${x.index},y=${y.index}" onclick="next(this)">
+
+    </div>
+</div>
+<div class="buttons">
+    <button onclick="next(this)" x="" y="" autoNext="false">下一步</button>
+    <button onclick="reset(this)">重置</button>
+    <button onclick="back(this)">撤回</button>
+</div>
+</body>
+<script>
+    function next(that) {
+        window.location = "/next?x=" + that.getAttribute("x") + "&y=" + that.getAttribute("y") + "&autoNext=" + that.getAttribute("autoNext");
+    }
+    function reset(that) {
+        window.location = "/reset";
+    }
+    function back(that) {
+        window.location = "/back";
+    }
+</script>
+</html>
