@@ -13,7 +13,7 @@ public class JumpTow extends LiveTwo {
 
     @Override
     public int score() {
-        return 4;
+        return 5;
     }
 
     @Override

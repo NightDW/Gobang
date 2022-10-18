@@ -21,9 +21,4 @@ public class SleepThree extends Combo {
     public int score() {
         return 3; // 一般不会刻意去构造眠三（不如形成活三，然后等对方来堵），因此眠三的分数不能太高
     }
-
-    @Override
-    public int destroyScore() {
-        return 2; // 同理，破坏对方的眠三的意义也不大
-    }
 }

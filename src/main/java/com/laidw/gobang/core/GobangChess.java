@@ -106,27 +106,21 @@ public class GobangChess {
     }
 
     /**
-     * 获取在指定位置落子的收益（落子前后我方Combo总分之差 + 落子前后对方Combo的destroy总分之差）
+     * 获取在指定位置落子的收益（落子前后我方Combo总分之差）
      */
     public final int tryAndGetNetScore(int x, int y, Color color) {
         final List<Combo> comboBuffer = new ArrayList<>();
+        int before = 0, after = 0;
 
-        int[] blackBefore = {0, 0}, whiteBefore = {0, 0};
-        int[] blackAfter = {0, 0}, whiteAfter = {0, 0};
         setValue(x, y, color);
-
         for (LineScanner scanner : getScannersOf(x, y)) {
-            accumulate(scanner.localBlackCombos, blackBefore);
-            accumulate(scanner.localWhiteCombos, whiteBefore);
-
-            accumulate(scanner.scan(Color.BLACK, comboBuffer), blackAfter);
-            comboBuffer.clear();
-            accumulate(scanner.scan(Color.WHITE, comboBuffer), whiteAfter);
+            before += getTotalScoreOf(color == Color.BLACK ? scanner.localBlackCombos : scanner.localWhiteCombos);
+            after += getTotalScoreOf(scanner.scan(color, comboBuffer));
             comboBuffer.clear();
         }
-
         setValue(x, y, null);
-        return color == Color.BLACK ? blackAfter[0] - blackBefore[0] + whiteBefore[1] - whiteAfter[1] : whiteAfter[0] - whiteBefore[0] + blackBefore[1] - blackAfter[1];
+
+        return after - before;
     }
 
     /**
@@ -189,6 +183,18 @@ public class GobangChess {
     public final ComboMap getLiveTwoMapOf(Color color) {
         return (color == Color.BLACK ? blackLiveTwoMap : whiteLiveTwoMap).unmodified();
     }
+    public final int getRushFourCountOf(Color color, Integer position) {
+        return (color == Color.BLACK ? blackRushFourMap : whiteRushFourMap).getOrEmpty(position).size();
+    }
+
+    public final int getLiveThreeCountOf(Color color, Integer position) {
+        return (color == Color.BLACK ? blackLiveThreeMap : whiteLiveThreeMap).getOrEmpty(position).size();
+    }
+
+    public final int getLiveTwoCountOf(Color color, Integer position) {
+        return (color == Color.BLACK ? blackLiveTwoMap : whiteLiveTwoMap).getOrEmpty(position).size();
+    }
+
 
     public final boolean isValid(int x, int y) {
         return x >= 0 && y >= 0 && x < dimension && y < dimension;
@@ -231,16 +237,17 @@ public class GobangChess {
         matrix[x][y] = color == null ? 0 : color.value;
     }
 
-    private static void accumulate(Collection<Combo> combos, int[] results) {
-        for (Combo combo : combos) {
-            results[0] += combo.score();
-            results[1] += combo.destroyScore();
-        }
-    }
-
     @Override
     public final String toString() {
         return ChessUtil.toString(this, matrix);
+    }
+
+    private static int getTotalScoreOf(Collection<Combo> combos) {
+        int total = 0;
+        for (Combo combo : combos) {
+            total += combo.score();
+        }
+        return total;
     }
 
 

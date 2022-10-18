@@ -14,16 +14,28 @@ import java.util.*;
  */
 public abstract class VcfUtil {
     private static final int ADDITION_LIVE_THREE_COUNT = 0;
+    private static final int MAX_VCF_TIMES = 11000;
+    private static int VCF_TIMES = 0;
 
     private VcfUtil() {}
+
+    public static boolean tryVcf(GobangChess chess, Color me, Color opponent, LinkedList<Integer> path) {
+        VCF_TIMES = 0;
+        boolean result = tryVcfInternal(chess, me, opponent, path);
+        VCF_TIMES = 0;
+        return result;
+    }
 
     /**
      * 尝试进行VCF，枚举出所有冲四点并不断冲四，看看能不能形成我方获胜的局面
      *
      * 返回值代表是否VCF成功；如果成功，则path中第一个元素就是当前应该落子的位置
      */
-    public static boolean tryVcf(GobangChess chess, Color me, Color opponent, LinkedList<Integer> path) {
-        
+    private static boolean tryVcfInternal(GobangChess chess, Color me, Color opponent, LinkedList<Integer> path) {
+        if (VCF_TIMES++ >= MAX_VCF_TIMES) {
+            return false;
+        }
+
         // 我方有冲四，说明VCF成功
         Combo myFirst = chess.getFirstComboOf(me);
         if (myFirst instanceof RushFour) {
@@ -69,7 +81,7 @@ public abstract class VcfUtil {
 
             // 递归调用；如果被调用方返回true，说明该路线可行，因此直接返回true
             // 注意返回前需要先撤回之前的操作，而path不需要删除元素
-            if (tryVcf(chess, me, opponent, path)) {
+            if (tryVcfInternal(chess, me, opponent, path)) {
                 chess.back();
                 chess.back();
                 return true;
@@ -112,7 +124,7 @@ public abstract class VcfUtil {
             chess.set(opponentPosition, opponent);
 
             // 如果接下来能VCF成功，则本次VCF也是成功的；否则失败
-            if (tryVcf(chess, me, opponent, path)) {
+            if (tryVcfInternal(chess, me, opponent, path)) {
                 chess.back();
                 chess.back();
                 return true;
@@ -201,7 +213,7 @@ public abstract class VcfUtil {
             for (Integer opponentPosition : opponentPositions) {
                 path.clear();
                 chess.set(opponentPosition, opponent);
-                boolean vcfSuccess = tryVcf(chess, me, opponent, path);
+                boolean vcfSuccess = tryVcfInternal(chess, me, opponent, path);
 
                 // 注意，如果VCF失败了，也不要立刻认为该点不可行；此时可以再构建一个活三，然后再VCF看看能不能赢
                 // 如果再构建一个活三后成功地VCF了，则当前的活三点是可行的
@@ -262,7 +274,7 @@ public abstract class VcfUtil {
         for (Integer nextPosition : myFirst.getNextPositions()) {
             path.clear();
             chess.set(nextPosition, opponent);
-            boolean vcfSuccess = tryVcf(chess, me, opponent, path);
+            boolean vcfSuccess = tryVcfInternal(chess, me, opponent, path);
 
             // 注意，如果VCF失败了，也不要立刻认为该点不可行；此时可以再构建一个活三，然后再VCF看看能不能赢
             // 如果再构建一个活三后成功地VCF了，则当前的活三点是可行的

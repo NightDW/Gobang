@@ -13,7 +13,7 @@ public class ConTow extends LiveTwo {
 
     @Override
     public int score() {
-        return 5;
+        return 6;
     }
 
     @Override

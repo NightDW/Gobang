@@ -16,9 +16,4 @@ public abstract class LiveTwo extends Combo {
     public int order() {
         return 4;
     }
-
-    @Override
-    public int destroyScore() {
-        return 2;
-    }
 }
