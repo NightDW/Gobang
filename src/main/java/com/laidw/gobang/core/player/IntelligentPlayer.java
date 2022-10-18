@@ -218,15 +218,13 @@ public class IntelligentPlayer extends GobangPlayer {
 
         ScoreStrategy scoreStrategy = scoreStrategies[scoreStrategiesIdx];
         int maxScore = Integer.MIN_VALUE;
-        Integer maxPosition = null;
         List<Integer> maxPositions = new ArrayList<>();
         for (Integer position : positions) {
             int score = scoreStrategy.getScoreOfPosition(chess, me, opponent, position);
             if (score > maxScore) {
                 maxScore = score;
-                maxPosition = position;
                 maxPositions.clear();
-                maxPositions.add(maxPosition);
+                maxPositions.add(position);
             } else if (score == maxScore) {
                 maxPositions.add(position);
             }
