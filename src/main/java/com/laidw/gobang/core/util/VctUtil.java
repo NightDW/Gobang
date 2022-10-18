@@ -133,11 +133,11 @@ public abstract class VctUtil {
     }
 
     /**
-     * 判断形成的活三是否会被反四或反活三；如果会被反四，则返回false；如果会被反活三，且allowRevertedLiveThree为false，则也返回false
+     * 判断形成的组合是否会被反四或反活三；如果会被反四，则返回false；如果会被反活三，且allowRevertedLiveThree为false，则也返回false
      */
-    private static boolean checkRevert(Combo liveThree, boolean allowRevertedLiveThree, Set<Integer> opponentRushFourPositions, Set<Integer> opponentLiveThreePositions) {
-        return noInteract(opponentRushFourPositions, liveThree.getNextPositions()) &&
-                (allowRevertedLiveThree || noInteract(opponentLiveThreePositions, liveThree.getNextPositions()));
+    public static boolean checkRevert(Combo combo, boolean allowRevertedLiveThree, Set<Integer> opponentRushFourPositions, Set<Integer> opponentLiveThreePositions) {
+        return noInteract(opponentRushFourPositions, combo.getNextPositions()) &&
+                (allowRevertedLiveThree || noInteract(opponentLiveThreePositions, combo.getNextPositions()));
     }
 
     /**

@@ -6,8 +6,8 @@ import com.laidw.gobang.core.combo.four.RushFour;
 import com.laidw.gobang.core.combo.three.LiveThree;
 import com.laidw.gobang.core.constant.Color;
 import com.laidw.gobang.core.score.ScoreStrategy;
+import com.laidw.gobang.core.score.impl.ComboPairScoreStrategy;
 import com.laidw.gobang.core.score.impl.DestructiveComboPointScoreStrategy;
-import com.laidw.gobang.core.score.impl.FutureComboPointScoreStrategy;
 import com.laidw.gobang.core.score.impl.SimpleScoreStrategy;
 import com.laidw.gobang.core.util.ComboUtil;
 import com.laidw.gobang.core.util.VcfUtil;
@@ -23,13 +23,11 @@ import java.util.Map;
  * 比较智能地决定下棋的位置
  */
 public class IntelligentPlayer extends GobangPlayer {
-    private static final ScoreStrategy[] blackStrategies = { new SimpleScoreStrategy(), new FutureComboPointScoreStrategy() };
-    private static final ScoreStrategy[] whiteStrategies = { new DestructiveComboPointScoreStrategy(), new FutureComboPointScoreStrategy() };
+    private static final ScoreStrategy[] ATTACKER_STRATEGIES = { new ComboPairScoreStrategy(), new DestructiveComboPointScoreStrategy() };
+    private static final ScoreStrategy[] DEFENDER_STRATEGIES = { new SimpleScoreStrategy(), new DestructiveComboPointScoreStrategy() };
 
-    private final ScoreStrategy[] scoreStrategies;
     public IntelligentPlayer(Color color, GobangChess chess) {
         super(color, chess);
-        this.scoreStrategies = color == Color.BLACK ? blackStrategies : whiteStrategies;
     }
 
     @Override
@@ -65,7 +63,7 @@ public class IntelligentPlayer extends GobangPlayer {
         // 如果对方有冲四（包括活四），则只能去堵
         // 如果对方有活四，其实可以考虑不去堵，因为堵了也是输
         if (opponentFirst instanceof RushFour) {
-            return findBestFrom(opponentFirst.getNextPositions());
+            return findBestFrom(opponentFirst.getNextPositions(), DEFENDER_STRATEGIES);
         }
 
         // 如果我方有活三，则构造活四
@@ -92,7 +90,7 @@ public class IntelligentPlayer extends GobangPlayer {
         // 如果对方有活三，则堵活三
         if (opponentFirst instanceof LiveThree) {
             System.out.println(me + "：堵对手活三");
-            return findBestFrom(opponentFirst.getNextPositions());
+            return findBestFrom(opponentFirst.getNextPositions(), DEFENDER_STRATEGIES);
         }
 
         // 如果对方有44点，则堵住该点
@@ -110,7 +108,7 @@ public class IntelligentPlayer extends GobangPlayer {
             if (position != null) {
                 return position;
             }
-            return findBestFrom(null);
+            return findBestFrom(null, DEFENDER_STRATEGIES);
         }
 
         // 如果能形成双活三，则构造双活三
@@ -139,13 +137,14 @@ public class IntelligentPlayer extends GobangPlayer {
             return position;
         }
 
-        return findBestFrom(null);
+        System.out.println(me + "：评估");
+        return findBestFrom(null, me == Color.BLACK ? ATTACKER_STRATEGIES : DEFENDER_STRATEGIES);
     }
 
     /**
      * 从指定的点中找到最好的点来落子；如果positions为null，则从所有空格中找到最好的点
      */
-    private int findBestFrom(List<Integer> positions) {
+    private int findBestFrom(List<Integer> positions, ScoreStrategy[] scoreStrategies) {
         if (positions == null) {
             int dimension = chess.getDimension();
             positions = new ArrayList<>(dimension * dimension);
@@ -162,7 +161,7 @@ public class IntelligentPlayer extends GobangPlayer {
             return positions.get(0);
         }
 
-        return findBestFrom(positions, 0);
+        return findBestFrom(positions, scoreStrategies, 0);
     }
 
     /**
@@ -185,7 +184,7 @@ public class IntelligentPlayer extends GobangPlayer {
             chess.back();
         }
 
-        return candidates.isEmpty() ? null : findBestFrom(candidates);
+        return candidates.isEmpty() ? null : findBestFrom(candidates, DEFENDER_STRATEGIES);
     }
 
     /**
@@ -212,7 +211,7 @@ public class IntelligentPlayer extends GobangPlayer {
         return null;
     }
 
-    private Integer findBestFrom(List<Integer> positions, int scoreStrategiesIdx) {
+    private Integer findBestFrom(List<Integer> positions, ScoreStrategy[] scoreStrategies, int scoreStrategiesIdx) {
         if (positions.size() == 1 || scoreStrategiesIdx >= scoreStrategies.length) {
             return positions.get(0);
         }
@@ -232,6 +231,6 @@ public class IntelligentPlayer extends GobangPlayer {
                 maxPositions.add(position);
             }
         }
-        return findBestFrom(maxPositions, scoreStrategiesIdx + 1);
+        return findBestFrom(maxPositions, scoreStrategies, scoreStrategiesIdx + 1);
     }
 }
