@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public class IntelligentPlayer extends GobangPlayer {
     private static final ScoreStrategy[] ATTACKER_STRATEGIES = { new ComboPairScoreStrategy(), new DestructiveComboPointScoreStrategy() };
-    private static final ScoreStrategy[] DEFENDER_STRATEGIES = { new SimpleScoreStrategy(), new DestructiveComboPointScoreStrategy() };
+    private static final ScoreStrategy[] DEFENDER_STRATEGIES = { new DestructiveComboPointScoreStrategy(), new ComboPairScoreStrategy() };
 
     public IntelligentPlayer(Color color, GobangChess chess) {
         super(color, chess);
