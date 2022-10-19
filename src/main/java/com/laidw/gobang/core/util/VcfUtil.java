@@ -14,7 +14,7 @@ import java.util.*;
  */
 public abstract class VcfUtil {
     private static final int ADDITION_LIVE_THREE_COUNT = 0;
-    private static final int MAX_VCF_TIMES = 11000;
+    private static final int MAX_VCF_TIMES = 33333;
     private static int VCF_TIMES = 0;
 
     private VcfUtil() {}
