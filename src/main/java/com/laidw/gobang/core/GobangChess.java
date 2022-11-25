@@ -106,24 +106,6 @@ public class GobangChess {
     }
 
     /**
-     * 获取在指定位置落子的收益（落子前后我方Combo总分之差）
-     */
-    public final int tryAndGetNetScore(int x, int y, Color color) {
-        final List<Combo> comboBuffer = new ArrayList<>();
-        int before = 0, after = 0;
-
-        setValue(x, y, color);
-        for (LineScanner scanner : getScannersOf(x, y)) {
-            before += getTotalScoreOf(color == Color.BLACK ? scanner.localBlackCombos : scanner.localWhiteCombos);
-            after += getTotalScoreOf(scanner.scan(color, comboBuffer));
-            comboBuffer.clear();
-        }
-        setValue(x, y, null);
-
-        return after - before;
-    }
-
-    /**
      * 在指定位置落子，并更新棋盘信息
      */
     private void setAndRefresh(int x, int y, Color color) {
@@ -240,14 +222,6 @@ public class GobangChess {
     @Override
     public final String toString() {
         return ChessUtil.toString(this, matrix);
-    }
-
-    private static int getTotalScoreOf(Collection<Combo> combos) {
-        int total = 0;
-        for (Combo combo : combos) {
-            total += combo.score();
-        }
-        return total;
     }
 
 

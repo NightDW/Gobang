@@ -8,7 +8,6 @@ import com.laidw.gobang.core.constant.Color;
 import com.laidw.gobang.core.score.ScoreStrategy;
 import com.laidw.gobang.core.score.impl.ComboPairScoreStrategy;
 import com.laidw.gobang.core.score.impl.DestructiveComboPointScoreStrategy;
-import com.laidw.gobang.core.score.impl.SimpleScoreStrategy;
 import com.laidw.gobang.core.util.ComboUtil;
 import com.laidw.gobang.core.util.VcfUtil;
 import com.laidw.gobang.core.util.VctUtil;

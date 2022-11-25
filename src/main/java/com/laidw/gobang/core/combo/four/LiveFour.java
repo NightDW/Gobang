@@ -15,9 +15,4 @@ public class LiveFour extends ConFour {
     public int order() {
         return 0;
     }
-
-    @Override
-    public int score() {
-        return 10000; // 活四一般不会出现在打分环节中
-    }
 }

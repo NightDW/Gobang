@@ -16,9 +16,4 @@ public abstract class RushFour extends Combo {
     public int order() {
         return 1;
     }
-
-    @Override
-    public int score() {
-        return 0; // 冲四的得分是0，因为进入打分环节时，我们已经知道VCT和VCF不可能成功，因此构造冲四只会浪费我方的资源
-    }
 }

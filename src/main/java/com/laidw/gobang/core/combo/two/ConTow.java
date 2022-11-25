@@ -12,11 +12,6 @@ public class ConTow extends LiveTwo {
     }
 
     @Override
-    public int score() {
-        return 6;
-    }
-
-    @Override
     public int length() {
         return 2;
     }

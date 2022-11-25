@@ -74,11 +74,6 @@ public abstract class Combo implements Comparable<Combo> {
     public abstract int order();
 
     /**
-     * 我方形成该组合能获得的分数；在打分的时候用到
-     */
-    public abstract int score();
-
-    /**
      * 该组合的长度；一般只有冲四、活三和活二会用到
      */
     public int length() {

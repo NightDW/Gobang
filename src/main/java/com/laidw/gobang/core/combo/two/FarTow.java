@@ -12,11 +12,6 @@ public class FarTow extends LiveTwo {
     }
 
     @Override
-    public int score() {
-        return 3;
-    }
-
-    @Override
     public int length() {
         return 4;
     }

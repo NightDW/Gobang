@@ -12,11 +12,6 @@ public class JumpThree extends LiveThree {
     }
 
     @Override
-    public int score() {
-        return 13; // 活三一般是由活二转换来的，因此活三的分数要包含活二的分数
-    }
-
-    @Override
     public int length() {
         return 4;
     }

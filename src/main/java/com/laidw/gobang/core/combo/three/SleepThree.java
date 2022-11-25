@@ -16,9 +16,4 @@ public class SleepThree extends Combo {
     public int order() {
         return 3;
     }
-
-    @Override
-    public int score() {
-        return 3; // 一般不会刻意去构造眠三（不如形成活三，然后等对方来堵），因此眠三的分数不能太高
-    }
 }
